@@ -1,13 +1,11 @@
 # Progress
 
-Done: plan, schema, guarded store API, deterministic and Claude intent providers, tool idempotency and atomic audit, timeout/lost-response recovery, 35 passing tests, 160 synthetic ticket replay, real embedded PostgreSQL demo output, Docker and native PostgreSQL Actions configuration.
+Done: scoped implementation, plan/assumptions, unit/integration/adversarial edge-case tests, synthetic seeded demo, README/architecture/tradeoffs, public GitHub publication and checkpoint history, topics/description, dependency/format/type checks, full-history configured secret scan, native PostgreSQL Actions verification and fresh-checkout Docker Compose demo.
 
-Results: TypeScript passed. Tests 35 passed, 0 failed, 0 skipped. Replay 50 resolved, 110 escalated, zero wrong-action/state/label mismatches, all data synthetic. No real model or customer requests.
+Measured: 35 distinct tests. Native 35 passed/0 environment-specific skipped; embedded 35 passed/0 environment-specific skipped; zero failures. Every distinct case passed in an appropriate environment. [CI evidence](https://github.com/umair24171/support-resolution-agent/actions/runs/40030071043), code `2abd2161c5795c56bc7717fe126fa65054c8b47b`.
 
-Running: none at checkpoint.
+Running: no background worker intentionally left running.
 
-Next: remote creation/push and topics, native PostgreSQL CI, clean-clone Docker demonstration. GitHub creation/auth and host Docker are blocked, see docs/BLOCKERS.md. Do not mark complete. Proceed to project 3 under the blocker rule. No deployment and no existing repository modified.
+Next: include the verified project in the BuildZn portfolio PR after all four projects pass their gates. No deployment or merge. Keep production/model limitations explicit.
 
-Fresh local git clone verified: npm ci, formatting, TypeScript, embedded PostgreSQL tests and demo passed. Working tree remained clean. Evidence: docs/clean-clone-output.txt. Native Docker and GitHub Actions gates remain unverified.
-
-Final guard review added direct-tool validation for invalid clocks and non-action intents, with tool errors audited. Test count is 35.
+Original host-only limitations were resolved using scoped GitHub access and hosted Actions, with no new credential or paid service. Original local checkpoint hashes are preserved in remote commit messages.

@@ -1,4 +1,4 @@
-# Work in progress: Support resolution agent
+# Support resolution agent
 
 Synthetic BuildZn portfolio project. Tickets produce guarded store actions, not just replies. Ownership, refund policy, idempotency and audit records are enforced in a PostgreSQL-backed mock store API. No real refunds, store integration or messages.
 
@@ -18,7 +18,7 @@ flowchart TD
 Node 24 and Docker Compose:
 
 ```sh
-git clone <repository-url>
+git clone https://github.com/umair24171/support-resolution-agent.git
 cd support-resolution-agent
 docker compose up -d db
 npm ci
@@ -37,7 +37,7 @@ Supplemental cloud path: `TEST_PGLITE=1 npm test`, `TEST_PGLITE=1 npm run demo`,
 
 ## Measured results
 
-35 tests passed, zero failed or skipped, on embedded PostgreSQL. TypeScript check passed. Synthetic replay: 160 tickets, 50 resolved (31.25%), 110 escalated (68.75%), zero wrong-action/state/label mismatches. docs/test-output.txt and docs/replay-output.txt contain the real output. These are 16 policy templates with 10 distinct synthetic identities per template. They are a regression fixture set, not a representative customer-service benchmark. Rates use the deterministic mock, not Claude. Native PostgreSQL concurrency and Docker CI remain pending; no green Actions claim.
+35 tests passed, zero failed or skipped, on embedded PostgreSQL. TypeScript check passed. Synthetic replay: 160 tickets, 50 resolved (31.25%), 110 escalated (68.75%), zero wrong-action/state/label mismatches. docs/test-output.txt and docs/replay-output.txt contain the real output. These are 16 policy templates with 10 distinct synthetic identities per template. They are a regression fixture set, not a representative customer-service benchmark. Rates use the deterministic mock, not Claude. Native PostgreSQL, the embedded complement and the clean-checkout Docker demo passed in the linked Actions run.
 
 ## Tradeoffs and limits
 
@@ -46,3 +46,7 @@ The mock store is an in-process API boundary with atomic action and ledger commi
 Known injection phrases escalate early, but regex detection is not the security boundary. Even a malicious intent provider cannot select a different order or bypass ownership, amount and policy guards. Draft text and tool proposals are untrusted. Broader semantic injection and model quality remain unevaluated. Malicious requests within ordinary policy bounds cannot be reliably distinguished from ordinary requests by this fixture suite alone.
 
 Audit records are append-only in application code; database administrators can alter them. The replay reports wrong-action/state/label mismatches together, a stricter fixture regression count than wrong writes alone. See docs/PLAN.md, docs/ASSUMPTIONS.md and docs/BLOCKERS.md. Claude adapter needs ANTHROPIC_API_KEY and CLAUDE_MODEL only when explicitly constructed; no paid calls were run.
+
+## Verified native CI
+
+[Public source](https://github.com/umair24171/support-resolution-agent) and [successful Actions run](https://github.com/umair24171/support-resolution-agent/actions/runs/40030071043), code commit `2abd2161c5795c56bc7717fe126fa65054c8b47b`. Native PostgreSQL: 35 discovered, 35 passed, 0 environment-specific skipped, zero failed. Embedded complement: 35 passed, 0 environment-specific skipped, zero failed. All 35 distinct cases executed successfully in at least one appropriate environment. Docker Compose built and ran the demo from the runner’s fresh checkout. No hosting deployment. Real logs: docs/native-ci-output.txt.
