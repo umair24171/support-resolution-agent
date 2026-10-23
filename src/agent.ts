@@ -5,6 +5,7 @@ const hash=(v:unknown)=>createHash('sha256').update(JSON.stringify(v)).digest('h
 export class MockStoreAPI{
  constructor(private db:Database){}
  async apply(t:Ticket,intent:Exclude<Intent,{kind:'escalate'}>,now:string,fault?:'before-commit'|'lost-response'){
+ validate(intent);
  const key=`ticket:${t.id}:action`,fingerprint=hash([t.principal,t.orderId,intent]);
  const result=await this.db.tx(async q=>{
   if(!t.verified)throw new Error('Identity not verified');
@@ -31,6 +32,7 @@ export class SupportAgent{
  async resolve(t:Ticket,now='2026-01-20T00:00:00Z',fault?:'before-commit'|'lost-response'):Promise<Result>{
  const fingerprint=hash(t);
  const escalate=async(reason:string):Promise<Result>=>{await this.db.query('INSERT INTO audit(ticket,principal,event,detail) VALUES($1,$2,$3,$4)',[t.id,t.principal,'escalation',reason]);return {status:'escalated',reason};};
+ if(/ignore (?:all |the )?(?:previous |system )?instructions|system prompt|bypass/i.test(t.text))return escalate('Untrusted policy instructions');
  if(!t.id||!t.principal||!t.verified||!t.orderId||!t.text.trim()||t.text.length>20000)return escalate('Missing verified identity, order ID or valid text');
  await this.db.query('INSERT INTO tickets(id,fingerprint) VALUES($1,$2) ON CONFLICT DO NOTHING',[t.id,fingerprint]);
  const [prior]=await this.db.query('SELECT * FROM tickets WHERE id=$1',[t.id]);if(prior!.fingerprint!==fingerprint)return escalate('Conflicting ticket input');

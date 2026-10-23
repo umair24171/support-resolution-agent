@@ -1,0 +1,16 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> buildzn-support-resolution-agent@0.1.0 replay
+> node --import tsx src/replay-cli.ts
+
+{
+  "data": "synthetic",
+  "provider": "deterministic mock",
+  "tickets": 160,
+  "resolved": 50,
+  "escalated": 110,
+  "wrongActions": 0,
+  "autoResolutionRate": 0.3125,
+  "wrongActionRate": 0,
+  "escalationRate": 0.6875
+}

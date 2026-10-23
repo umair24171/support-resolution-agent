@@ -1,0 +1,46 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> buildzn-support-resolution-agent@0.1.0 test
+> node --import tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ 01 prompt injection escalates even with malicious provider (1083.611563ms)
+✔ 02 malicious proposal cannot choose someone else order (17.402088ms)
+✔ 02 idempotency replay checks owner before returning result (18.959717ms)
+✔ 03 refund above cap rejected (13.093367ms)
+✔ 03 refund above order amount rejected (16.106412ms)
+✔ 04 repeat ticket performs one action (17.214965ms)
+✔ 04 conflicting request under same ticket ID escalates (12.540533ms)
+✔ 05 mixed conflicting intent escalates (8.680387ms)
+✔ 06 precommit tool failure leaves no mutation, then retries (16.902925ms)
+✔ 06 lost response after commit retries without double action (16.909384ms)
+✔ 07 already refunded order escalates (9.92125ms)
+✔ 08 missing order ID escalates (8.232342ms)
+✔ 09 angry message does not expand refund authority (9.60991ms)
+✔ 09 abusive but valid own-order request follows ordinary policy (11.246109ms)
+✔ 10 Urdu English request calls guarded refund (10.781588ms)
+✔ 10 ambiguous mixed language escalates (6.120405ms)
+✔ 11 pending order address changes through tool (9.120873ms)
+✔ 11 shipped order address change denied (10.058277ms)
+✔ 11 reschedule requires future date and pending order (13.803217ms)
+✔ 11 refund outside return window denied (9.988601ms)
+✔ 12 malformed proposal {"kind":"refund","amount":-1} denied (8.910566ms)
+✔ 12 malformed proposal {"kind":"refund","amount":1.5} denied (5.524375ms)
+✔ 12 malformed proposal {"kind":"refund","amount":null} denied (6.811889ms)
+✔ 12 malformed proposal {"kind":"execute","command":"rm"} denied (13.532669ms)
+✔ 12 malformed proposal {"kind":"address","address":""} denied (5.682064ms)
+✔ 12 malformed proposal {"kind":"reschedule","date":"2026-02-31"} denied (5.995276ms)
+✔ 12 malformed proposal null denied (8.517432ms)
+✔ 12 direct store invocation also validates amounts (5.59367ms)
+✔ 12 unverified identity denied (5.014245ms)
+✔ 13 action and denial emit audit records (13.017392ms)
+✔ 13 concurrent requests cannot perform two refunds (21.445127ms)
+✔ 14 160-ticket replay compares independent labels and resulting store state (744.619105ms)
+✔ unit structured intent cannot grant extra authority (4.997832ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2644.554417
