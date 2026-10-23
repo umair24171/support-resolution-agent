@@ -1,1 +1,10 @@
-import {connect} from './db.js';import {migrate} from './schema.js';import {replay} from './replay.js';const db=await connect();try{await migrate(db);console.log(JSON.stringify(await replay(db),null,2));}finally{await db.close();}
+import { connect } from "./db.js";
+import { migrate } from "./schema.js";
+import { replay } from "./replay.js";
+const db = await connect();
+try {
+  await migrate(db);
+  console.log(JSON.stringify(await replay(db), null, 2));
+} finally {
+  await db.close();
+}
