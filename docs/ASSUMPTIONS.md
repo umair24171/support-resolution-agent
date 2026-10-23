@@ -6,6 +6,6 @@ The mock store API is an in-process API boundary backed by PostgreSQL, not a rea
 
 Claude can propose intents; deterministic guards remain authoritative. Mock-provider replay measures this synthetic policy and fixture set, not Claude quality or a production resolution rate. No paid model calls. Unclear mixed-language requests escalate.
 
-Owner/site placeholders resolved to verified umair24171 and umair24171/dev_umair. Cloud uses supplemental PGlite because Docker/native Postgres are unavailable. Native PostgreSQL CI remains unverified until repository creation and push are available.
+Owner/site placeholders resolved to verified umair24171 and umair24171/dev_umair. The authoring host uses supplemental PGlite. Native PostgreSQL, the embedded complement and Docker were separately verified on GitHub-hosted Actions; see docs/TEST-REPORT.md.
 
 Source code is provided under the MIT license. Public repository names and topics are proposed until GitHub creation succeeds.
