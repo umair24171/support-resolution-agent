@@ -7,3 +7,7 @@ Results: TypeScript passed. Tests 35 passed, 0 failed, 0 skipped. Replay 50 reso
 Running: none at checkpoint.
 
 Next: remote creation/push and topics, native PostgreSQL CI, clean-clone Docker demonstration. GitHub creation/auth and host Docker are blocked, see docs/BLOCKERS.md. Do not mark complete. Proceed to project 3 under the blocker rule. No deployment and no existing repository modified.
+
+Fresh local git clone verified: npm ci, formatting, TypeScript, embedded PostgreSQL tests and demo passed. Working tree remained clean. Evidence: docs/clean-clone-output.txt. Native Docker and GitHub Actions gates remain unverified.
+
+Final guard review added direct-tool validation for invalid clocks and non-action intents, with tool errors audited. Test count is 35.

@@ -1,0 +1,90 @@
+Cloning into '/workspace/scratch/6cff42f61b37/verification-clones/support-resolution-agent'...
+done.
+4059691ee3a23813cb85d8b39629a09cb4e37dad
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 25 packages in 654ms
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> buildzn-support-resolution-agent@0.1.0 format:check
+> prettier --check src tests scripts *.json *.yml .github/workflows/*.yml *.md docs/*.md
+
+Checking formatting...
+All matched files use Prettier code style!
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> buildzn-support-resolution-agent@0.1.0 build
+> tsc --noEmit
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> buildzn-support-resolution-agent@0.1.0 test
+> node --import tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ 01 prompt injection escalates even with malicious provider (1001.987382ms)
+✔ 02 malicious proposal cannot choose someone else order (10.823543ms)
+✔ 02 idempotency replay checks owner before returning result (12.491701ms)
+✔ 03 refund above cap rejected (9.301346ms)
+✔ 03 refund above order amount rejected (14.338817ms)
+✔ 04 repeat ticket performs one action (14.742808ms)
+✔ 04 conflicting request under same ticket ID escalates (13.629617ms)
+✔ 05 mixed conflicting intent escalates (6.046836ms)
+✔ 06 precommit tool failure leaves no mutation, then retries (17.803766ms)
+✔ 06 lost response after commit retries without double action (14.153929ms)
+✔ 07 already refunded order escalates (11.846657ms)
+✔ 08 missing order ID escalates (7.590705ms)
+✔ 09 angry message does not expand refund authority (11.194962ms)
+✔ 09 abusive but valid own-order request follows ordinary policy (10.734409ms)
+✔ 10 Urdu English request calls guarded refund (9.764895ms)
+✔ 10 ambiguous mixed language escalates (5.515203ms)
+✔ 11 pending order address changes through tool (10.250157ms)
+✔ 11 shipped order address change denied (9.020842ms)
+✔ 11 reschedule requires future date and pending order (18.518265ms)
+✔ 11 refund outside return window denied (8.381126ms)
+✔ 12 malformed proposal {"kind":"refund","amount":-1} denied (5.625309ms)
+✔ 12 malformed proposal {"kind":"refund","amount":1.5} denied (7.03123ms)
+✔ 12 malformed proposal {"kind":"refund","amount":null} denied (5.750197ms)
+✔ 12 malformed proposal {"kind":"execute","command":"rm"} denied (5.672039ms)
+✔ 12 malformed proposal {"kind":"address","address":""} denied (5.205635ms)
+✔ 12 malformed proposal {"kind":"reschedule","date":"2026-02-31"} denied (5.946994ms)
+✔ 12 malformed proposal null denied (6.23645ms)
+✔ 12 direct store invocation also validates amounts (5.263844ms)
+✔ 12 unverified identity denied (5.86434ms)
+✔ 13 action and denial emit audit records (13.860436ms)
+✔ 13 concurrent requests cannot perform two refunds (10.110187ms)
+✔ 14 160-ticket replay compares independent labels and resulting store state (749.467621ms)
+✔ unit structured intent cannot grant extra authority (4.027508ms)
+✔ 12 direct tool rejects non-action intent and audits denial (4.57214ms)
+✔ 12 invalid tool clock cannot bypass refund return window (4.978122ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2444.80452
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> buildzn-support-resolution-agent@0.1.0 demo
+> node --import tsx src/demo.ts
+
+All data synthetic. No real store or money.
+Guarded tool result: {
+  status: 'resolved',
+  action: { orderId: 'synthetic-demo-order', kind: 'refund', amount: 1000 }
+}
+Idempotent replay: {
+  action: { kind: 'refund', amount: 1000, orderId: 'synthetic-demo-order' },
+  status: 'resolved'
+}
+Order state: [ { id: 'synthetic-demo-order', refunded: 1000 } ]
+Audit: [
+  {
+    ticket: 'synthetic-demo-ticket',
+    event: 'action',
+    detail: '{"orderId":"synthetic-demo-order","kind":"refund","amount":1000}'
+  }
+]
+
+Fresh local clone checks passed. Embedded PostgreSQL only; Docker and native CI not run. Working tree clean.
