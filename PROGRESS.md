@@ -1,8 +1,8 @@
 # Progress
 
-Done: plan, schema, guarded store API, deterministic and Claude intent providers, tool idempotency and atomic audit, timeout/lost-response recovery, 33 passing tests, 160 synthetic ticket replay, real embedded PostgreSQL demo output, Docker and native PostgreSQL Actions configuration.
+Done: plan, schema, guarded store API, deterministic and Claude intent providers, tool idempotency and atomic audit, timeout/lost-response recovery, 35 passing tests, 160 synthetic ticket replay, real embedded PostgreSQL demo output, Docker and native PostgreSQL Actions configuration.
 
-Results: TypeScript passed. Tests 33 passed, 0 failed, 0 skipped. Replay 50 resolved, 110 escalated, zero wrong-action/state/label mismatches, all data synthetic. No real model or customer requests.
+Results: TypeScript passed. Tests 35 passed, 0 failed, 0 skipped. Replay 50 resolved, 110 escalated, zero wrong-action/state/label mismatches, all data synthetic. No real model or customer requests.
 
 Running: none at checkpoint.
 

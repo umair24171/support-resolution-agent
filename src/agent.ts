@@ -21,70 +21,90 @@ export class MockStoreAPI {
     now: string,
     fault?: "before-commit" | "lost-response",
   ) {
-    validate(intent);
-    const key = `ticket:${t.id}:action`,
-      fingerprint = hash([t.principal, t.orderId, intent]);
-    const result = await this.db.tx(async (q) => {
-      if (!t.verified) throw new Error("Identity not verified");
-      const [o] = await q.query("SELECT * FROM orders WHERE id=$1 FOR UPDATE", [
-        t.orderId,
-      ]);
-      if (!o || o.owner !== t.principal)
-        throw new Error("Order not accessible");
-      const [prior] = await q.query("SELECT * FROM actions WHERE key=$1", [
-        key,
-      ]);
-      if (prior) {
-        if (prior.owner !== t.principal || prior.fingerprint !== fingerprint)
-          throw new Error("Conflicting idempotency key");
-        return prior.result;
-      }
-      if (intent.kind === "refund") {
-        if (intent.amount > 5000 || intent.amount > o.amount)
-          throw new Error("Refund exceeds limit");
-        if (o.refunded > 0) throw new Error("Already refunded");
-        const age = Date.parse(now) - new Date(o.purchased_at).getTime();
-        if (o.status !== "delivered" || age < 0 || age > 30 * 86400000)
-          throw new Error("Refund policy denied");
-        await q.query("UPDATE orders SET refunded=$2 WHERE id=$1", [
-          o.id,
-          intent.amount,
+    try {
+      const checked = validate(intent);
+      if (checked.kind === "escalate")
+        throw new Error("Concrete tool action required");
+      intent = checked;
+      if (!Number.isFinite(Date.parse(now)))
+        throw new Error("Valid tool clock required");
+      const key = `ticket:${t.id}:action`,
+        fingerprint = hash([t.principal, t.orderId, intent]);
+      const result = await this.db.tx(async (q) => {
+        if (!t.verified) throw new Error("Identity not verified");
+        const [o] = await q.query(
+          "SELECT * FROM orders WHERE id=$1 FOR UPDATE",
+          [t.orderId],
+        );
+        if (!o || o.owner !== t.principal)
+          throw new Error("Order not accessible");
+        const [prior] = await q.query("SELECT * FROM actions WHERE key=$1", [
+          key,
         ]);
-      } else {
-        if (o.status !== "pending") throw new Error("Order already shipped");
-        if (intent.kind === "address")
-          await q.query("UPDATE orders SET address=$2 WHERE id=$1", [
-            o.id,
-            intent.address,
-          ]);
-        else {
-          if (Date.parse(intent.date) <= Date.parse(now))
-            throw new Error("Future date required");
-          await q.query("UPDATE orders SET delivery_date=$2 WHERE id=$1", [
-            o.id,
-            intent.date,
-          ]);
+        if (prior) {
+          if (prior.owner !== t.principal || prior.fingerprint !== fingerprint)
+            throw new Error("Conflicting idempotency key");
+          return prior.result;
         }
-      }
-      const action = { orderId: o.id, ...intent };
-      await q.query("INSERT INTO actions VALUES($1,$2,$3,$4,$5,$6)", [
-        key,
-        fingerprint,
-        t.principal,
-        o.id,
-        intent.kind,
-        JSON.stringify(action),
-      ]);
-      await q.query(
+        if (intent.kind === "refund") {
+          if (intent.amount > 5000 || intent.amount > o.amount)
+            throw new Error("Refund exceeds limit");
+          if (o.refunded > 0) throw new Error("Already refunded");
+          const age = Date.parse(now) - new Date(o.purchased_at).getTime();
+          if (o.status !== "delivered" || age < 0 || age > 30 * 86400000)
+            throw new Error("Refund policy denied");
+          await q.query("UPDATE orders SET refunded=$2 WHERE id=$1", [
+            o.id,
+            intent.amount,
+          ]);
+        } else {
+          if (o.status !== "pending") throw new Error("Order already shipped");
+          if (intent.kind === "address")
+            await q.query("UPDATE orders SET address=$2 WHERE id=$1", [
+              o.id,
+              intent.address,
+            ]);
+          else {
+            if (Date.parse(intent.date) <= Date.parse(now))
+              throw new Error("Future date required");
+            await q.query("UPDATE orders SET delivery_date=$2 WHERE id=$1", [
+              o.id,
+              intent.date,
+            ]);
+          }
+        }
+        const action = { orderId: o.id, ...intent };
+        await q.query("INSERT INTO actions VALUES($1,$2,$3,$4,$5,$6)", [
+          key,
+          fingerprint,
+          t.principal,
+          o.id,
+          intent.kind,
+          JSON.stringify(action),
+        ]);
+        await q.query(
+          "INSERT INTO audit(ticket,principal,event,detail) VALUES($1,$2,$3,$4)",
+          [t.id, t.principal, "action", JSON.stringify(action)],
+        );
+        if (fault === "before-commit")
+          throw new Error("Tool failure before commit");
+        return action;
+      });
+      if (fault === "lost-response")
+        throw new Error("Tool timeout after commit");
+      return result;
+    } catch (e) {
+      await this.db.query(
         "INSERT INTO audit(ticket,principal,event,detail) VALUES($1,$2,$3,$4)",
-        [t.id, t.principal, "action", JSON.stringify(action)],
+        [
+          t.id,
+          t.principal,
+          "tool-error",
+          e instanceof Error ? e.message : "Unknown tool failure",
+        ],
       );
-      if (fault === "before-commit")
-        throw new Error("Tool failure before commit");
-      return action;
-    });
-    if (fault === "lost-response") throw new Error("Tool timeout after commit");
-    return result;
+      throw e;
+    }
   }
 }
 export class SupportAgent {

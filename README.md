@@ -37,7 +37,7 @@ Supplemental cloud path: `TEST_PGLITE=1 npm test`, `TEST_PGLITE=1 npm run demo`,
 
 ## Measured results
 
-33 tests passed, zero failed or skipped, on embedded PostgreSQL. TypeScript check passed. Synthetic replay: 160 tickets, 50 resolved (31.25%), 110 escalated (68.75%), zero wrong-action/state/label mismatches. docs/test-output.txt and docs/replay-output.txt contain the real output. These are 16 policy templates with 10 distinct synthetic identities per template. They are a regression fixture set, not a representative customer-service benchmark. Rates use the deterministic mock, not Claude. Native PostgreSQL concurrency and Docker CI remain pending; no green Actions claim.
+35 tests passed, zero failed or skipped, on embedded PostgreSQL. TypeScript check passed. Synthetic replay: 160 tickets, 50 resolved (31.25%), 110 escalated (68.75%), zero wrong-action/state/label mismatches. docs/test-output.txt and docs/replay-output.txt contain the real output. These are 16 policy templates with 10 distinct synthetic identities per template. They are a regression fixture set, not a representative customer-service benchmark. Rates use the deterministic mock, not Claude. Native PostgreSQL concurrency and Docker CI remain pending; no green Actions claim.
 
 ## Tradeoffs and limits
 

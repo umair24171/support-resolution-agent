@@ -238,3 +238,24 @@ test("unit structured intent cannot grant extra authority", () => {
     { kind: "refund", amount: 1000 },
   );
 });
+test("12 direct tool rejects non-action intent and audits denial", async () => {
+  await assert.rejects(
+    new MockStoreAPI(db).apply(
+      t,
+      { kind: "escalate", reason: "bad" } as never,
+      "2026-01-20Z",
+    ),
+    /Concrete/,
+  );
+  assert.equal(
+    (await db.query("SELECT * FROM audit WHERE event='tool-error'")).length,
+    1,
+  );
+});
+test("12 invalid tool clock cannot bypass refund return window", async () => {
+  await assert.rejects(
+    new MockStoreAPI(db).apply(t, { kind: "refund", amount: 1000 }, "invalid"),
+    /clock/,
+  );
+  assert.equal(await refunded(), 0);
+});
